@@ -299,7 +299,7 @@ public:
 
             // Point to next non-data byte
             rPtr = lPtr;
-            while ((buffer[rPtr + 1] < MIDI_TYPE) && (rPtr < (length - 1)))
+            while ((rPtr < (length - 1)) && (buffer[rPtr + 1] < MIDI_TYPE))
                 rPtr++;
 
             if (!runningStatusContinuation)
