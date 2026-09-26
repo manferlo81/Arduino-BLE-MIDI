@@ -186,7 +186,7 @@ bool BLEMIDI_ESP32_NimBLE<_Settings>::begin(const char *deviceName, BLEMIDI_Tran
     _bleMidiTransport = bleMidiTransport;
 
     BLEDevice::init(deviceName);
- 
+
     NimBLEDevice::setSecurityIOCap(_Settings::BLESecurityCapabilities); // Attention, it may need a passkey
     NimBLEDevice::setSecurityAuth(_Settings::BLEBond, _Settings::BLEMITM, _Settings::BLEPair);
 
@@ -220,9 +220,17 @@ bool BLEMIDI_ESP32_NimBLE<_Settings>::begin(const char *deviceName, BLEMIDI_Tran
     /** Optional: set the transmit power, default is 3db */
     NimBLEDevice::setPower(_Settings::BLETXPwr); /** +9db */
 
+#define NIMBLE_SERVICE_REQUIRE_EXPLICIT_START (                     \
+    !defined(NIMBLE_CPP_VERSION_MAJOR) ||                           \
+    !defined(NIMBLE_CPP_VERSION_MINOR) ||                           \
+    NIMBLE_CPP_VERSION_MAJOR < 2 ||                                 \
+    (NIMBLE_CPP_VERSION_MAJOR == 2 && NIMBLE_CPP_VERSION_MINOR < 4) \
+)
 
+#if NIMBLE_SERVICE_REQUIRE_EXPLICIT_START
     // Start the service
     service->start();
+#endif
 
     // Start advertising
     _advertising = _server->getAdvertising();
