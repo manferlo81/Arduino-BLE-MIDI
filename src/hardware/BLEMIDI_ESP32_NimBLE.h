@@ -151,10 +151,17 @@ protected:
             _bluetoothEsp32->connected();
     };
 
+    // Keep original lathoub/Arduino-BLE-MIDI callback for compatibility
     void onDisconnect(BLEServer *, NimBLEConnInfo &)
     {
         if (_bluetoothEsp32)
             _bluetoothEsp32->disconnected();
+    }
+
+    // Add correct callback for NimBLE 2.5
+    void onDisconnect(NimBLEServer * server, NimBLEConnInfo & info, int) override
+    {
+        onDisconnect(server, info);
     }
 };
 
