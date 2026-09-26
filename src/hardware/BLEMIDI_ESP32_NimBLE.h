@@ -237,6 +237,15 @@ bool BLEMIDI_ESP32_NimBLE<_Settings>::begin(const char *deviceName, BLEMIDI_Tran
     _advertising->addServiceUUID(service->getUUID());
     _advertising->setAppearance(0x00);
     _advertising->setName(deviceName);
+
+#if (ARDUINO_ESP32S3_DEV || ARDUINO_ESP32C3_DEV || ARDUINO_AirM2M_CORE_ESP32C3 || ARDUINO_ESP32_DEV)
+    NimBLEAdvertisementData scanData;
+    scanData.setAppearance(0x00);
+    scanData.setName(deviceName);
+    _advertising->setScanResponseData(scanData);
+    _advertising->enableScanResponse(true);
+#endif
+
     _advertising->start();
 
     return true;
