@@ -227,14 +227,14 @@ bool BLEMIDI_ESP32_NimBLE<_Settings>::begin(const char *deviceName, BLEMIDI_Tran
     /** Optional: set the transmit power, default is 3db */
     NimBLEDevice::setPower(_Settings::BLETXPwr); /** +9db */
 
-#define NIMBLE_SERVICE_REQUIRE_EXPLICIT_START (                     \
+#define NIMBLE_SERVICE_REQUIRES_EXPLICIT_START (                    \
     !defined(NIMBLE_CPP_VERSION_MAJOR) ||                           \
     !defined(NIMBLE_CPP_VERSION_MINOR) ||                           \
     NIMBLE_CPP_VERSION_MAJOR < 2 ||                                 \
     (NIMBLE_CPP_VERSION_MAJOR == 2 && NIMBLE_CPP_VERSION_MINOR < 4) \
 )
 
-#if NIMBLE_SERVICE_REQUIRE_EXPLICIT_START
+#if NIMBLE_SERVICE_REQUIRES_EXPLICIT_START
     // Start the service
     service->start();
 #endif
@@ -245,13 +245,11 @@ bool BLEMIDI_ESP32_NimBLE<_Settings>::begin(const char *deviceName, BLEMIDI_Tran
     _advertising->setAppearance(0x00);
     _advertising->setName(deviceName);
 
-#if (ARDUINO_ESP32S3_DEV || ARDUINO_ESP32C3_DEV || ARDUINO_AirM2M_CORE_ESP32C3 || ARDUINO_ESP32_DEV)
     NimBLEAdvertisementData scanData;
     scanData.setAppearance(0x00);
     scanData.setName(deviceName);
     _advertising->setScanResponseData(scanData);
     _advertising->enableScanResponse(true);
-#endif
 
     _advertising->start();
 
